@@ -3,7 +3,8 @@
     "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
     "appPort": [
         80,
-        443
+        443,
+        3000
     ],
     "postCreateCommand": "docker-compose pull"
 }
