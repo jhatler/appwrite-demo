@@ -1,30 +1,45 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <p>
+      {{ loggedInUser ? `Logged in as ${loggedInUser.name}` : 'Not logged in' }}
+    </p>
+
+    <form>
+      <input type="email" placeholder="Email" v-model="email" />
+      <input type="password" placeholder="Password" v-model="password" />
+      <input type="text" placeholder="Name" v-model="name" />
+      <button type="button" @click="login(email, password)">Login</button>
+      <button type="button" @click="register">
+        Register
+      </button>
+      <button type="button" @click="logout">
+        Logout
+      </button>
+    </form>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script setup>
+import { ref } from 'vue';
+import { account, ID } from './lib/appwrite.js';
+
+const loggedInUser = ref(null);
+const email = ref('');
+const password = ref('');
+const name = ref('');
+
+const login = async (email, password) => {
+  await account.createEmailPasswordSession(email, password);
+  loggedInUser.value = await account.get();
+};
+
+const register = async () => {
+  await account.create(ID.unique(), email.value, password.value, name.value);
+  login(email.value, password.value);
+};
+
+const logout = async () => {
+  await account.deleteSession('current');
+  loggedInUser.value = null;
+};
+</script>
