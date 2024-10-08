@@ -1,4 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
-    "image": "mcr.microsoft.com/devcontainers/universal:2-linux"
+    "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+    "appPort": [
+        80,
+        443
+    ],
+    "postCreateCommand": "docker-compose pull"
 }
